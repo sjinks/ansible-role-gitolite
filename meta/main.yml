@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: gitolite
   author: Volodymyr Kolesnykov
   description: gitolite role
   license: MIT

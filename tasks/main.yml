@@ -1,0 +1,19 @@
+---
+- name: Install gitolite
+  package: name=gitolite3 state=present
+- name: Create gitolite user
+  user: name="{{ gitolite_user }}" home="{{ gitolite_user_home }}" shell=/bin/bash state=present
+- name: Check if admin key exists
+  stat: path="{{ gitolite_user_home }}/.gitolite/keydir/{{ gitolite_admin }}.pub"
+  register: rc
+- name: Set up key
+  block:
+    - name: Transfer admin key
+      copy: src="{{ gitolite_admin_key }}" dest="{{ gitolite_user_home }}/{{ gitolite_admin }}.pub" force=yes owner="{{ gitolite_user }}" group="{{ gitolite_user }}" mode=0640
+    - name: Set up admin key
+      command: gitolite setup -pk "{{ gitolite_user_home }}/{{ gitolite_admin }}.pub"
+      become: yes
+      become_user: "{{ gitolite_user }}"
+    - name: Clean up the key
+      file: src="{{ gitolite_user_home }}/{{ gitolite_admin }}.pub" state=absent
+  when: not rc.stat.exists

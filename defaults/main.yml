@@ -1,0 +1,5 @@
+---
+gitolite_user: "gitolite"
+gitolite_user_home: "/home/{{ gitolite_user }}"
+gitolite_admin_key: "~/.ssh/id_rsa.pub"
+gitolite_admin: "admin"

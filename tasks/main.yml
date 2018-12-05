@@ -1,6 +1,13 @@
 ---
-- name: Install gitolite
+- name: Install epel
+  package: name=epel state=latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+- name: Install gitolite (CentOS/RHEL/Debian/Ubuntu)
   package: name=gitolite3 state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' or ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+- name: Install gitolite (Alpine)
+  package: name=gitolite state=present
+  when: ansible_distribution == 'Alpine'
 - name: Create gitolite user
   user: name="{{ gitolite_user }}" home="{{ gitolite_user_home }}" shell=/bin/bash state=present
 - name: Check if admin key exists
